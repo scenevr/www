@@ -16,7 +16,7 @@ var tape = require('tape');
 var renderClient = require('../src/render-client');
 
 tape('render', function (t) {
-  var url = 'ws://example.com/boop.xml';
+  var url = 'ws://example.com/boop.xml?foo=bar';
   var view;
 
   var res = {
