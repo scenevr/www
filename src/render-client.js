@@ -6,6 +6,8 @@ var summary = require('scene-summary');
 var screenshot = require('scene-screenshot');
 var crypto = require('crypto');
 var URI = require('uri-js');
+var ip = require('ip');
+var dns = require('dns');
 
 function urlToId (url) {
   // Todo - normalize URLs a bit?
@@ -25,33 +27,59 @@ function populateRecord (key, record, callback) {
     }
   }
 
-  summary(record.url, function (err, html) {
+  var uri = URI.parse(record.url);
+
+  if (!uri.host) {
+    callback('Invalid url, no host.');
+    return;
+  }
+
+  dns.resolve(uri.host, function (err, addresses) {
     if (err) {
-      console.log('Unable to generate summary.\n\n' + err.toString());
+      callback('Could not resolve host');
       return;
     }
 
-    record.summary = html;
+    var address = addresses[0];
 
-    save();
-  });
-
-  screenshot(record.url, function (err, screenshot) {
-    if (err) {
-      console.log('Unable to generate screenshot.\n\n' + err.toString());
+    if (!address) {
+      callback('Could not get host ip address');
       return;
     }
 
-    var filename = record.id + '.png';
-    fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
+    if (ip.isPrivate(address)) {
+      callback('Cannot access private network');
+      return;
+    }
+
+    summary(record.url, function (err, html) {
       if (err) {
-        console.log('Unable to move screenshot.');
+        console.log('Unable to generate summary.\n\n' + err.toString());
         return;
       }
 
-      record.screenshot = filename;
+      record.summary = html;
 
       save();
+    });
+
+    screenshot(record.url, function (err, screenshot) {
+      if (err) {
+        console.log('Unable to generate screenshot.\n\n' + err.toString());
+        return;
+      }
+
+      var filename = record.id + '.png';
+      fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
+        if (err) {
+          console.log('Unable to move screenshot.');
+          return;
+        }
+
+        record.screenshot = filename;
+
+        save();
+      });
     });
   });
 }

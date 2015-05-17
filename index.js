@@ -11,6 +11,7 @@ app.use('/scenevr.js', browserify('./client.js', {
 }));
 app.use('/css', expressLess(__dirname + '/css'));
 app.use(express.static('public'));
+app.use('/screenshots', express.static('screenshots'));
 app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
@@ -19,10 +20,20 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 // });
 
 var getWebsocketUrl = function (path) {
-  var uri = URI.parse('ws:/' + path);
+  var uri;
+
+  if (path === '/') {
+    uri = URI.parse('ws://home.scenevr.hosting/home.xml');
+  } else {
+    uri = URI.parse('ws:/' + path);
+  }
 
   // force 8080 for websockets
   uri.port = 8080;
+
+  if ((uri.path === '') || (uri.path === '/')) {
+    uri.path = '/index.xml';
+  }
 
   return URI.serialize(uri);
 };
