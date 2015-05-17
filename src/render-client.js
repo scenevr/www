@@ -8,6 +8,7 @@ var crypto = require('crypto');
 var URI = require('uri-js');
 var ip = require('ip');
 var dns = require('dns');
+var net = require('net');
 
 function urlToId (url) {
   // Todo - normalize URLs a bit?
@@ -27,31 +28,7 @@ function populateRecord (key, record, callback) {
     }
   }
 
-  var uri = URI.parse(record.url);
-
-  if (!uri.host) {
-    callback('Invalid url, no host.');
-    return;
-  }
-
-  dns.resolve(uri.host, function (err, addresses) {
-    if (err) {
-      callback('Could not resolve host');
-      return;
-    }
-
-    var address = addresses[0];
-
-    if (!address) {
-      callback('Could not get host ip address');
-      return;
-    }
-
-    if (ip.isPrivate(address)) {
-      callback('Cannot access private network');
-      return;
-    }
-
+  function crawlScene () {
     summary(record.url, function (err, html) {
       if (err) {
         console.log('Unable to generate summary.\n\n' + err.toString());
@@ -81,7 +58,43 @@ function populateRecord (key, record, callback) {
         save();
       });
     });
-  });
+  }
+
+  function testIpAddress (address) {
+    if (ip.isPrivate(address)) {
+      callback('Cannot access private network');
+      return;
+    }
+
+    crawlScene();
+  }
+
+  var uri = URI.parse(record.url);
+
+  if (!uri.host) {
+    callback('Invalid url, no host.');
+    return;
+  }
+
+  if (net.isIP(uri.host)) {
+    testIpAddress(uri.host);
+  } else {
+    dns.resolve(uri.host, function (err, addresses) {
+      if (err) {
+        callback('Could not resolve host');
+        return;
+      }
+
+      var address = addresses[0];
+
+      if (!address) {
+        callback('Could not get host ip address');
+        return;
+      }
+
+      testIpAddress(address);
+    });
+  }
 }
 
 module.exports = function (res, url, callback) {

@@ -55,3 +55,23 @@ tape('private ip', function (t) {
     t.end();
   });
 });
+
+tape('bad domain name', function (t) {
+  var url = 'ws://flammenwerfer/';
+
+  renderClient(res, url, function (err, record) {
+    t.ok(err);
+    t.same(err, 'Could not resolve host');
+    t.end();
+  });
+});
+
+tape('host by ip address', function (t) {
+  var url = 'ws://127.0.0.1/';
+
+  renderClient(res, url, function (err, record) {
+    t.ok(err);
+    t.ok(err.match(/private network/));
+    t.end();
+  });
+});
