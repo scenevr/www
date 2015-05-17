@@ -32,6 +32,8 @@ tape('render', function (t) {
 
     t.ok(record.summary.match(/This is the summary/));
     t.ok(record.screenshot);
+    t.ok(record.createdAt);
+    t.same(record.title, 'boop.xml');
     t.ok(fs.existsSync(Path.join(__dirname, '..', 'screenshots', record.screenshot)));
 
     t.end();

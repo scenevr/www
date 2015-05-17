@@ -5,6 +5,7 @@ var client = redis.createClient();
 var summary = require('scene-summary');
 var screenshot = require('scene-screenshot');
 var crypto = require('crypto');
+var URI = require('uri-js');
 
 function urlToId (url) {
   // Todo - normalize URLs a bit?
@@ -73,6 +74,7 @@ module.exports = function (res, url, callback) {
       record = {
         id: id,
         url: url,
+        title: URI.parse(url).path.split('/').slice(-1)[0],
         createdAt: Date.now()
       };
 
@@ -81,6 +83,11 @@ module.exports = function (res, url, callback) {
       populateRecord(key, record, callback);
     }
 
-    res.render('connect', { url: url, summary: record.summary, screenshot: record.screenshot });
+    res.render('connect', {
+      url: url,
+      summary: record.summary,
+      screenshot: record.screenshot,
+      title: record.title
+    });
   });
 };
