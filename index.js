@@ -28,8 +28,10 @@ var getWebsocketUrl = function (path) {
     uri = URI.parse('ws:/' + path);
   }
 
-  // force 8080 for websockets
-  uri.port = 8080;
+  // force 8080 for websockets to get around proxies that dont upgrade websocket requests
+  if ((!uri.port) || (uri.port === 80)) {
+    uri.port = 8080;
+  }
 
   if ((uri.path === '') || (uri.path === '/')) {
     uri.path = '/index.xml';

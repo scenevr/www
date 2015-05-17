@@ -9,6 +9,53 @@ var URI = require('uri-js');
 var ip = require('ip');
 var dns = require('dns');
 var net = require('net');
+var Queue = require('bull');
+
+var crawlQueue = Queue('summarise and screenshot', 6379, '127.0.0.1');
+
+crawlQueue.process(function (job, done) {
+  var key = job.data.key;
+  var record = job.data.record;
+
+  function save () {
+    if (record.summary && record.screenshot) {
+      client.set(key, JSON.stringify(record));
+      done();
+    }
+  }
+
+  summary(record.url, function (err, html) {
+    if (err) {
+      console.log('Unable to generate summary');
+      return;
+    }
+
+    record.summary = html;
+
+    save();
+  });
+
+  screenshot(record.url, function (err, screenshot) {
+    if (err) {
+      console.log('Unable to generate screenshot');
+      return;
+    }
+
+    var filename = record.id + '.png';
+    fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
+      if (err) {
+        console.log('Unable to move screenshot');
+        return;
+      }
+
+      record.screenshot = filename;
+
+      save();
+    });
+  });
+});
+
+// crawlQueue.resume();
 
 function urlToId (url) {
   // Todo - normalize URLs a bit?
@@ -18,55 +65,18 @@ function urlToId (url) {
 }
 
 function populateRecord (key, record, callback) {
-  function save () {
-    if (record.summary && record.screenshot) {
-      client.set(key, JSON.stringify(record));
-
-      if (callback) {
-        callback(null, record);
-      }
-    }
-  }
-
-  function crawlScene () {
-    summary(record.url, function (err, html) {
-      if (err) {
-        callback('Unable to generate summary');
-        return;
-      }
-
-      record.summary = html;
-
-      save();
-    });
-
-    screenshot(record.url, function (err, screenshot) {
-      if (err) {
-        callback('Unable to generate screenshot');
-        return;
-      }
-
-      var filename = record.id + '.png';
-      fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
-        if (err) {
-          callback('Unable to move screenshot');
-          return;
-        }
-
-        record.screenshot = filename;
-
-        save();
-      });
-    });
-  }
-
   function testIpAddress (address) {
     if (ip.isPrivate(address)) {
       callback('Cannot access private network');
       return;
     }
 
-    crawlScene();
+    crawlQueue.add({
+      key: key,
+      record: record
+    });
+
+    callback(null, record);
   }
 
   var uri = URI.parse(record.url);
@@ -132,3 +142,5 @@ module.exports = function (res, url, callback) {
     });
   });
 };
+
+module.exports.queue = crawlQueue;
