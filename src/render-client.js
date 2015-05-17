@@ -31,7 +31,7 @@ function populateRecord (key, record, callback) {
   function crawlScene () {
     summary(record.url, function (err, html) {
       if (err) {
-        console.log('Unable to generate summary.\n\n' + err.toString());
+        callback('Unable to generate summary');
         return;
       }
 
@@ -42,14 +42,14 @@ function populateRecord (key, record, callback) {
 
     screenshot(record.url, function (err, screenshot) {
       if (err) {
-        console.log('Unable to generate screenshot.\n\n' + err.toString());
+        callback('Unable to generate screenshot');
         return;
       }
 
       var filename = record.id + '.png';
       fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
         if (err) {
-          console.log('Unable to move screenshot.');
+          callback('Unable to move screenshot');
           return;
         }
 
