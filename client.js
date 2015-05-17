@@ -1,12 +1,27 @@
 var $ = require('jquery');
 var Client = require('scene-client');
+var URI = require('uri-js');
 
 var getUrlFromLocation = function () {
-  if (window.location.pathname === '/') {
-    return 'ws://home.scenevr.hosting/home.xml';
+  var path = window.location.pathname + window.location.search;
+  var uri;
+
+  if (path === '/') {
+    uri = URI.parse('ws://home.scenevr.hosting/home.xml');
   } else {
-    return 'ws:/' + window.location.pathname + window.location.search;
+    uri = URI.parse('ws:/' + path);
   }
+
+  // force 8080 for websockets to get around proxies that dont upgrade websocket requests
+  if ((!uri.port) || (uri.port === 80)) {
+    uri.port = 8080;
+  }
+
+  if ((uri.path === '') || (uri.path === '/')) {
+    uri.path = '/index.xml';
+  }
+
+  return URI.serialize(uri);
 };
 
 var client;
@@ -17,23 +32,27 @@ $(function () {
 
   window.client = client;
 
-  console.log(getUrlFromLocation());
-
   client.loadScene(getUrlFromLocation());
 
   client.on('enterportal', function (e) {
-    window.history.pushState({}, 'SceneVR', '/' + e.url.replace(/^.+\/\//, ''));
+    var path = e.url.replace(/^.+\/\//, '');
+
+    window.history.pushState({ url: path }, 'SceneVR', '/' + path);
   });
 });
 
 $(window).on('popstate', function () {
   var url = getUrlFromLocation();
 
+  console.log('pop state');
+
   if (!client.isConnected()) {
     return;
   } else if (client.getSceneUrl() === url) {
     return;
   } else {
+    console.log('Changing url...');
+
     client.loadScene(url);
   }
 });

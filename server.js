@@ -15,10 +15,6 @@ app.use('/screenshots', express.static('screenshots'));
 app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
-// app.get('/', function (req, res) {
-//   renderClient(res, 'ws://home.scenevr.hosting/home.xml');
-// });
-
 var getWebsocketUrl = function (path) {
   var uri;
 

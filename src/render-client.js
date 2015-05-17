@@ -55,10 +55,7 @@ crawlQueue.process(function (job, done) {
   });
 });
 
-// crawlQueue.resume();
-
 function urlToId (url) {
-  // Todo - normalize URLs a bit?
   var shasum = crypto.createHash('sha1');
   shasum.update(url);
   return shasum.digest('hex');
@@ -110,6 +107,14 @@ function populateRecord (key, record, callback) {
 module.exports = function (res, url, callback) {
   var id = urlToId(url);
   var key = '/sites/' + id;
+
+  if (!callback) {
+    callback = function (err) {
+      if (err) {
+        console.log(err);
+      }
+    };
+  }
 
   client.get(key, function (err, reply) {
     if (err) {
