@@ -5,6 +5,7 @@ var URI = require('uri-js');
 var expressLess = require('express-less');
 var favicon = require('serve-favicon');
 var renderClient = require('./src/render-client');
+var saveScreenshot = require('./src/save-screenshot');
 
 app.use('/scenevr.js', browserify('./client.js', {
   transform: ['browserify-jade', 'stringify']
@@ -35,6 +36,11 @@ var getWebsocketUrl = function (path) {
 
   return URI.serialize(uri);
 };
+
+app.post('/screenshot', function (req, res) {
+  saveScreenshot(req.key, req.url);
+  res.text('thanks!');
+});
 
 app.get('*', function (req, res) {
   var url = getWebsocketUrl(req.path);
