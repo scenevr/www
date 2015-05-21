@@ -24,6 +24,43 @@ var getUrlFromLocation = function () {
   return URI.serialize(uri);
 };
 
+function uploadScreenshot (canvas) {
+  var img;
+
+  img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+
+  var w = window.open();
+  w.document.write('Uploading to imgur.com...');
+
+  $.ajax({
+    url: 'https://api.imgur.com/3/upload.json',
+    type: 'POST',
+    headers: {
+      Authorization: 'Client-ID 6dd7813a91510a3'
+    },
+    data: {
+      type: 'base64',
+      name: 'scenevr.jpg',
+      title: 'SceneVR Screenshot',
+      description: 'Made using http://www.scenevr.com/',
+      image: img
+    },
+    dataType: 'json'
+  }).success(function (data) {
+    var url = 'http://imgur.com/' + data.data.id + '?tags';
+    // _gaq.push(['_trackEvent', 'scenevr', 'uploadScreenshot', url]);
+
+    $.ajax({
+      url: 'http://www.scenevr.com/upload/',
+      data 
+    })
+    w.location.href = url;
+  }).error(function () {
+    w.close();
+    // _gaq.push(['_trackEvent', 'scenevr', 'uploadScreenshot', 'fail']);
+  });
+}
+
 var client;
 
 $(function () {
@@ -39,6 +76,10 @@ $(function () {
 
     window.history.pushState({ url: path }, 'SceneVR', '/' + path);
   });
+
+  setTimeout(function () {
+    uploadScreenshot(client.domElement[0]);
+  }, 5000);
 });
 
 $(window).on('popstate', function () {

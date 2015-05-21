@@ -1,59 +1,11 @@
-var fs = require('fs-extra');
-var Path = require('path');
 var redis = require('redis');
 var client = redis.createClient();
 var summary = require('scene-summary');
-var screenshot = require('scene-screenshot');
 var crypto = require('crypto');
 var URI = require('uri-js');
 var ip = require('ip');
 var dns = require('dns');
 var net = require('net');
-var Queue = require('bull');
-
-var crawlQueue = Queue('summarise and screenshot', 6379, '127.0.0.1');
-
-crawlQueue.process(function (job, done) {
-  var key = job.data.key;
-  var record = job.data.record;
-
-  function save () {
-    if (record.summary && record.screenshot) {
-      client.set(key, JSON.stringify(record));
-      done();
-    }
-  }
-
-  summary(record.url, function (err, html) {
-    if (err) {
-      console.log('Unable to generate summary');
-      return;
-    }
-
-    record.summary = html;
-
-    save();
-  });
-
-  screenshot(record.url, function (err, screenshot) {
-    if (err) {
-      console.log('Unable to generate screenshot');
-      return;
-    }
-
-    var filename = record.id + '.png';
-    fs.copy(screenshot, Path.join(__dirname, '..', 'screenshots', filename), function (err) {
-      if (err) {
-        console.log('Unable to move screenshot');
-        return;
-      }
-
-      record.screenshot = filename;
-
-      save();
-    });
-  });
-});
 
 function urlToId (url) {
   var shasum = crypto.createHash('sha1');
@@ -68,9 +20,14 @@ function populateRecord (key, record, callback) {
       return;
     }
 
-    crawlQueue.add({
-      key: key,
-      record: record
+    summary(record.url, function (err, html) {
+      if (err) {
+        console.log('Unable to generate summary');
+        return;
+      }
+
+      record.summary = html;
+      client.set(key, JSON.stringify(record));
     });
 
     callback(null, record);
@@ -147,5 +104,3 @@ module.exports = function (res, url, callback) {
     });
   });
 };
-
-module.exports.queue = crawlQueue;
