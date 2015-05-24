@@ -10,7 +10,7 @@
   "dependencies": {
     "browserify": "^9.0.7",
     "browserify-jade": "~0.1.2",
-    "browserify-middleware": "^5.0.2",
+    "browserify-middleware": "^4.0.0",
     "bull": "^0.2.7",
     "ejs": "^2.3.1",
     "express": "^4.12.3",
