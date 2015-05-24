@@ -21,6 +21,8 @@ var getUrlFromLocation = function () {
     uri.path = '/index.xml';
   }
 
+  alert(URI.serialize(uri));
+  
   return URI.serialize(uri);
 };
 
@@ -77,9 +79,9 @@ $(function () {
     window.history.pushState({ url: path }, 'SceneVR', '/' + path);
   });
 
-  setTimeout(function () {
-    uploadScreenshot(client.domElement[0]);
-  }, 5000);
+  // setTimeout(function () {
+  //   uploadScreenshot(client.domElement[0]);
+  // }, 5000);
 });
 
 $(window).on('popstate', function () {
