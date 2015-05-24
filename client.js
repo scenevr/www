@@ -21,8 +21,6 @@ var getUrlFromLocation = function () {
     uri.path = '/index.xml';
   }
 
-  alert(URI.serialize(uri));
-  
   return URI.serialize(uri);
 };
 
