@@ -9,11 +9,13 @@ var getUrlFromLocation = function () {
   if (path === '/') {
     uri = URI.parse('ws://home.scenevr.hosting/home.xml');
   } else {
-    uri = URI.parse('ws:/' + path);
+    var scheme = path.split('/').first;
+    var restOfPath = path.replace(/.+?\//, '');
+    uri = URI.parse(scheme + '://' + path);
   }
 
   // force 8080 for websockets to get around proxies that dont upgrade websocket requests
-  if ((!uri.port) || (uri.port === 80)) {
+  if ((uri.scheme === 'ws') && ((!uri.port) || (uri.port === 80))) {
     uri.port = 8080;
   }
 
