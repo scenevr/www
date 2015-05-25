@@ -45,7 +45,7 @@ function populateRecord (key, record, callback) {
   } else {
     dns.resolve(uri.host, function (err, addresses) {
       if (err) {
-        callback('Could not resolve host');
+        callback('Could not resolve host ' + uri.host);
         return;
       }
 

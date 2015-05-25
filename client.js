@@ -11,7 +11,7 @@ var getUrlFromLocation = function () {
   } else {
     var scheme = path.split('/').first;
     var restOfPath = path.replace(/.+?\//, '');
-    uri = URI.parse(scheme + '://' + path);
+    uri = URI.parse(scheme + '://' + restOfPath);
   }
 
   // force 8080 for websockets to get around proxies that dont upgrade websocket requests
@@ -26,6 +26,7 @@ var getUrlFromLocation = function () {
   return URI.serialize(uri);
 };
 
+/*
 function uploadScreenshot (canvas) {
   var img;
 
@@ -54,7 +55,7 @@ function uploadScreenshot (canvas) {
 
     $.ajax({
       url: 'http://www.scenevr.com/upload/',
-      data 
+      data
     })
     w.location.href = url;
   }).error(function () {
@@ -62,6 +63,7 @@ function uploadScreenshot (canvas) {
     // _gaq.push(['_trackEvent', 'scenevr', 'uploadScreenshot', 'fail']);
   });
 }
+*/
 
 var client;
 

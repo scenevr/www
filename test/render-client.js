@@ -1,5 +1,4 @@
 var proxyquire = require('proxyquire').noCallThru();
-var fs = require('fs');
 var Path = require('path');
 
 proxyquire('../src/render-client', {
@@ -17,7 +16,6 @@ var renderClient = require('../src/render-client');
 var res = {
   render: function (v) { }
 };
-var queue = renderClient.queue;
 
 tape('render', function (t) {
   var url = 'ws://example.com/boop.xml?foo=bar';
@@ -25,27 +23,11 @@ tape('render', function (t) {
   renderClient(res, url, function (err, record) {
     t.ok(!err);
 
-    queue.on('completed', function (job) {
-      record = job.data.record;
+    t.ok(record.summary.match(/This is the summary/));
+    t.ok(!record.privateNetwork);
+    t.ok(record.createdAt);
+    t.same(record.title, 'boop.xml');
 
-      t.ok(record.summary.match(/This is the summary/));
-      t.ok(!record.privateNetwork);
-      t.ok(record.screenshot);
-      t.ok(record.createdAt);
-      t.same(record.title, 'boop.xml');
-      t.ok(fs.existsSync(Path.join(__dirname, '..', 'screenshots', record.screenshot)));
-
-      t.end();
-    });
-  });
-});
-
-tape('private ip', function (t) {
-  var url = 'ws://localhost/';
-
-  renderClient(res, url, function (err, record) {
-    t.ok(err);
-    t.ok(err.match(/private network/));
     t.end();
   });
 });
@@ -55,7 +37,7 @@ tape('bad domain name', function (t) {
 
   renderClient(res, url, function (err, record) {
     t.ok(err);
-    t.same(err, 'Could not resolve host');
+    t.same(err, 'Could not resolve host flammenwerfer');
     t.end();
   });
 });
@@ -71,6 +53,5 @@ tape('host by ip address', function (t) {
 });
 
 tape('shutdown', function (t) {
-  queue.close();
   t.end();
 });
