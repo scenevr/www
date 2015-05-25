@@ -9,7 +9,7 @@ var getUrlFromLocation = function () {
   if (path === '/') {
     uri = URI.parse('ws://home.scenevr.hosting/home.xml');
   } else {
-    var scheme = path.split('/').first;
+    var scheme = path.split('/')[1];
     var restOfPath = path.replace(/.+?\//, '');
     uri = URI.parse(scheme + '://' + restOfPath);
   }
