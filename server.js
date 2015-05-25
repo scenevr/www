@@ -7,12 +7,14 @@ var favicon = require('serve-favicon');
 var renderClient = require('./src/render-client');
 var saveScreenshot = require('./src/save-screenshot');
 
+app.set('views', __dirname + '/views');
+
 app.use('/scenevr.js', browserify(__dirname + '/client.js', {
   transform: ['browserify-jade', 'stringify']
 }));
+
 app.use('/css', expressLess(__dirname + '/css'));
-app.use(express.static('public'));
-app.use('/screenshots', express.static('screenshots'));
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
