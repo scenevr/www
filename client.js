@@ -76,9 +76,10 @@ $(function () {
   client.loadScene(getUrlFromLocation());
 
   client.on('enterportal', function (e) {
+    var scheme = e.url.replace(/:\/.+/,'');
     var path = e.url.replace(/^.+\/\//, '');
 
-    window.history.pushState({ url: path }, 'SceneVR', '/' + path);
+    window.history.pushState({ url: path }, 'SceneVR', '/' + scheme + '/' + path);
   });
 
   // setTimeout(function () {
