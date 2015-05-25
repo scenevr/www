@@ -7,7 +7,7 @@ var favicon = require('serve-favicon');
 var renderClient = require('./src/render-client');
 var saveScreenshot = require('./src/save-screenshot');
 
-app.use('/scenevr.js', browserify('./client.js', {
+app.use('/scenevr.js', browserify(__dirname + '/client.js', {
   transform: ['browserify-jade', 'stringify']
 }));
 app.use('/css', expressLess(__dirname + '/css'));
