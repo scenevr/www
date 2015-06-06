@@ -1,6 +1,6 @@
 {
   "name": "scene-www",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "main": "index.js",
   "scripts": {
     "test": "semistandard && tape test/*.js"
@@ -12,13 +12,14 @@
     "browserify-jade": "~0.1.2",
     "browserify-middleware": "^4.0.0",
     "ejs": "^2.3.1",
+    "exorcist": "^0.4.0",
     "express": "^4.12.3",
     "express-less": "0.0.7",
     "fs-extra": "^0.18.3",
     "ip": "^0.3.2",
     "jquery": "^2.1.4",
     "redis": "^0.12.1",
-    "scene-client": "1.3.0",
+    "scene-client": "1.4.0",
     "scene-summary": "^1.0.1",
     "serve-favicon": "^2.2.0",
     "stringify": "^3.1.0",
