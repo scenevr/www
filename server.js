@@ -10,7 +10,7 @@ var saveScreenshot = require('./src/save-screenshot');
 app.set('views', __dirname + '/views');
 
 app.use('/scenevr.js', browserify(__dirname + '/client.js', {
-  transform: ['browserify-jade', 'stringify']
+  transform: ['stringify']
 }));
 
 app.use('/css', expressLess(__dirname + '/css'));
