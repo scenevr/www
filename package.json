@@ -9,7 +9,7 @@
   "license": "BSD",
   "dependencies": {
     "browserify": "^9.0.7",
-    "browserify-middleware": "^4.0.0",
+    "browserify-middleware": "^7.0.0",
     "ejs": "^2.3.1",
     "exorcist": "^0.4.0",
     "express": "^4.12.3",
@@ -19,11 +19,13 @@
     "ip": "^0.3.2",
     "jquery": "^2.1.4",
     "redis": "^0.12.1",
-    "scene-client": "^1.6.0",
+    "scene-client": "^1.7.0",
     "scene-summary": "^1.0.1",
     "serve-favicon": "^2.2.0",
     "stringify": "^3.1.0",
-    "uri-js": "^1.4.2"
+    "uri-js": "^1.4.2",
+    "watchify": "^3.5.0",
+    "webvr-polyfill": "0.0.1"
   },
   "devDependencies": {
     "fakeredis": "^0.3.1",

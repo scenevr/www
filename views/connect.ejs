@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Scene :: <%= title %></title>
     <style>
       html,body{height: 100%; overflow: hidden;}
@@ -20,7 +20,7 @@
  </head>
   <body>
 
-    <div class="sk-spinner sk-spinner-three-bounce" style="position: absolute; left: 50%; top: 50%;">
+    <div class="sk-spinner sk-spinner-three-bounce" style="position: absolute; margin-left: -30px; left: 50%; top: 50%;">
       <div class="sk-bounce1"></div>
       <div class="sk-bounce2"></div>
       <div class="sk-bounce3"></div>
@@ -32,10 +32,10 @@
     
     <script src="/scenevr.js"></script>
     <link href="/css/scenevr.css" rel="stylesheet">
-    <script src="http://static.opentok.com/v2.2.9/js/opentok.min.js" ></script>
+    <!--script src="http://static.opentok.com/v2.2.9/js/opentok.min.js" ></script-->
 
     <header>
-      <a href="//www.scenevr.com">scene<br /><span>VR</span></a>
+      <a href="http://docs.scenevr.com">scene<br /><span>VR</span></a>
     </header>
     
     <div id="scene-view">
