@@ -1,5 +1,5 @@
 # config valid only for Capistrano 3.1
-lock '3.2.1'
+lock '3.4.0'
 
 set :application, 'scene-www'
 set :repo_url, 'git@github.com:scenevr/www.git'
@@ -58,7 +58,7 @@ namespace :deploy do
   task :start_forever do
     on roles(:app), in: :sequence, wait: 5 do
       execute "cd #{release_path}; npm install"
-      execute "NODE_ENV=production forever start /home/ben/www/current/server.js"
+      execute "NODE_ENV=production forever start --workingDir /home/ben/www/current start /home/ben/www/current/server.js"
     end
   end
 end
