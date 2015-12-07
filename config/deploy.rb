@@ -58,7 +58,7 @@ namespace :deploy do
   task :start_forever do
     on roles(:app), in: :sequence, wait: 5 do
       execute "cd #{release_path}; npm install"
-      execute "NODE_ENV=production forever start --workingDir /home/ben/www/current start /home/ben/www/current/server.js"
+      execute "NODE_ENV=production forever --workingDir /home/ben/www/current start /home/ben/www/current/server.js"
     end
   end
 end
