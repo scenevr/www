@@ -36,9 +36,12 @@ set :deploy_to, '/home/ben/www'
 
 namespace :deploy do
 
-  before :starting, :run_tests
+  before :starting, :run_tests_and_update
 
-  task :run_tests do
+  task :run_tests_and_update do
+    system "npm install --save scene-client"
+    system "git commit package.json -m 'Bump scene-client'"
+
     unless system "npm test"
       puts "Tests failed."
       exit
