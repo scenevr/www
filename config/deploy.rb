@@ -41,7 +41,8 @@ namespace :deploy do
   task :run_tests_and_update do
     system "npm install --save scene-client"
     system "git commit package.json -m 'Bump scene-client'"
-
+    system "git push"
+    
     unless system "npm test"
       puts "Tests failed."
       exit
