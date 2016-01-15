@@ -21,7 +21,7 @@
     "ip": "^0.3.2",
     "jquery": "^2.1.4",
     "redis": "^0.12.1",
-    "scene-client": "^1.13.4",
+    "scene-client": "^1.14.0",
     "scene-summary": "^1.0.1",
     "serve-favicon": "^2.2.0",
     "stringify": "^3.1.0",
