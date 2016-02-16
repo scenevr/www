@@ -34,6 +34,8 @@ set :deploy_to, '/home/ben/www'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+set :linked_dirs, %w{node_modules}
+
 namespace :deploy do
 
   before :starting, :run_tests_and_update
