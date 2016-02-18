@@ -27,7 +27,7 @@ var getUrlFromLocation = function () {
 
 var client;
 
-document.addEventListener('DOMContentLoaded', () => {
+window.startClient = function () {
   client = new Client(document.getElementById('scene-view'));
   client.initialize();
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.history.pushState({ url: path }, 'SceneVR', '/' + scheme + '/' + path);
   });
-});
+};
 
 window.addEventListener('popstate', () => {
   var url = getUrlFromLocation();

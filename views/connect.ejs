@@ -27,23 +27,26 @@
     </div>
 
     <script>
-      CLIENT_URL = "<%= url %>";
+      CLIENT_URL = '<%= url %>';
     </script>
     
     <script src="/scenevr.js"></script>
     <link href="/css/scenevr.css" rel="stylesheet">
 
-    <script src="/vendor/opus_decoder.js"></script>
+    <!--script src="/vendor/opus_decoder.js"></script>
     <script src="/vendor/opus_encoder.js"></script>
-    <script src="/vendor/resampler.js"></script>
-
+    <script src="/vendor/resampler.js"></script-->
 
     <header>
-      <a href="http://docs.scenevr.com">scene<br /><span>VR</span></a>
+      <a href="https://www.scenevr.com">scene<br /><span>VR</span></a>
     </header>
     
     <div id="scene-view">
     </div>
+
+    <script>
+      startClient();
+    </script>
 
     <% if (summary) { %>
       <noscript>
